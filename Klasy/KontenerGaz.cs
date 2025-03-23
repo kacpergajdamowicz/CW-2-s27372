@@ -2,21 +2,32 @@
 
 namespace CW_2_s27372.Klasy
 {
-    internal class KontenerGaz() : Kontener(TypKontenera.G), IHazardNotifier
+    internal class KontenerGaz(int wysokosc, int glebokosc, float masaWlasna, float maxLadownosc) : Kontener(TypKontenera.G, wysokosc, glebokosc, masaWlasna, maxLadownosc)
     {
         public override void Zaladuj(float masa)
         {
             MasaLadunku = masa;
+            Console.WriteLine($"Kontener {NrSeryjny}: ladunek zaladowany");
         }
 
-        public void Oproznij()
+        public override void Oproznij()
         {
             MasaLadunku = MasaLadunku * 0.95f;
+            Console.WriteLine($"Kontener {NrSeryjny}: ladunek rozaladowany");
         }
 
-        public void NotifyHazard(string message)
+        public override string ToString()
         {
-            Console.Write($"Kontener {NrSeryjny}: {message}");
+            return @$"
+=== Dane kontenera ===
+Numer seryjny: {NrSeryjny}
+Maksymalna ladownosc: {MaxLadownosc}
+Wysykosc: {Wysykosc}
+Glebokosc: {Glebokosc}
+MasaWlasna: {MasaWlasna}
+=== Aktualne dane ===
+Masa ladunku: {MasaLadunku}
+            ";
         }
     }
 }

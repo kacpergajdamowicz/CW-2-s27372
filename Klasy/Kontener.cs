@@ -1,4 +1,6 @@
-﻿namespace CW_2_s27372.Klasy
+﻿using CW_2_s27372.Interfejsy;
+
+namespace CW_2_s27372.Klasy
 {
     enum TypKontenera
     {
@@ -7,7 +9,7 @@
 
     class OverfillException(string message) : Exception(message);
 
-    abstract class Kontener(TypKontenera typ)
+    abstract class Kontener(TypKontenera typ, int wysokosc, int glebokosc, float masaWlasna, float maxLadownosc) : IHazardNotifier
     {
         private static Dictionary<TypKontenera, int> _liczniki = new()
         {
@@ -16,15 +18,15 @@
             { TypKontenera.C, 1}
         };
         private float _masaLadunku;
-        public float MasaWlasna { get; set; }
-        public int Wysykosc { get; set; }
-        public int Glebokosc { get; set; }
+        public float MasaWlasna { get; set; } = masaWlasna;
+        public int Wysykosc { get; set; } = wysokosc;
+        public int Glebokosc { get; set; } = glebokosc;
         public string NrSeryjny { get; } = $"KON-{typ}-{_liczniki[typ]++}";
-        public float MaxLadownosc { get; set; }
+        public float MaxLadownosc { get; set; } = maxLadownosc;
         public float MasaLadunku
         {
             get => _masaLadunku;
-            set
+            protected set
             {
                 if (value > MaxLadownosc)
                 {
@@ -37,11 +39,12 @@
             }
         }
 
-        public void Oproznij()
-        {
-            MasaLadunku = 0;
-        }
+        public abstract void Oproznij();
 
         public abstract void Zaladuj(float masa);
+
+        public abstract override string ToString();
+
+        public void NotifyHazard(string message) => Console.WriteLine($"Kontener {NrSeryjny}: {message}");
     }
 }
